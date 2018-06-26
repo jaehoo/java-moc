@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Student {
 
-    private int gradYear;
+    private Integer gradYear;
     private Double score;
-
 }

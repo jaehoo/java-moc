@@ -59,7 +59,7 @@ public class IterationLambadaTest {
     }
 
     @Test
-    public void testClassicLoop() throws Exception {
+    public void loopClassicForEach() throws Exception {
 
         res.setProcess(new Object(){}.getClass().getEnclosingMethod().getName());
 
@@ -75,7 +75,7 @@ public class IterationLambadaTest {
     }
 
     @Test
-    public void testLambdaLoop() throws Exception {
+    public void loopStreamAnonymousLambda() throws Exception {
 
         res.setProcess(new Object(){}.getClass().getEnclosingMethod().getName());
 
@@ -88,7 +88,7 @@ public class IterationLambadaTest {
     }
 
     @Test
-    public void testLambdaLoopWithNamedFunctions() throws Exception {
+    public void loopStreamNamedFunc() throws Exception {
 
         res.setProcess(new Object(){}.getClass().getEnclosingMethod().getName());
 
@@ -108,24 +108,35 @@ public class IterationLambadaTest {
     }
 
     @Test
-    public void testLambdaLoopMaxNamedFunc() throws Exception {
+    public void loopStreamAnonymousLambdaOpt() throws Exception {
 
         res.setProcess(new Object(){}.getClass().getEnclosingMethod().getName());
 
-        highestScore = (students.stream().parallel()
-                .max(Comparator.comparing(Student::getScore)).get()).getScore();
+        highestScore = students.parallelStream()
+                .filter((Student s)-> s.getGradYear() == 2011)
+                .max((s1, s2) -> { return s1.getScore().compareTo(s2.getScore());})
+                .get().getScore();
 
-//        Student maxByScore = students.parallelStream()
-//                .max(Comparator.comparing(Student::getScore)).get();
-//        //.orElseThrow(NoSuchElementException::new);
     }
 
     @Test
-    public void testLambdaLoopReduceAnonymousFunc() throws Exception {
+    public void loopStreamNamedFuncOpt() throws Exception {
 
         res.setProcess(new Object(){}.getClass().getEnclosingMethod().getName());
 
-        Student st = students.stream().parallel()
+        highestScore = (students.parallelStream()
+                .filter(this::filterStudent)
+                .max(Comparator.comparing(Student::getScore)).get()).getScore();
+
+    }
+
+    @Test
+    public void loopReduceAnonymousFunc() throws Exception {
+
+        res.setProcess(new Object(){}.getClass().getEnclosingMethod().getName());
+
+        highestScore = students.stream().parallel()
+                .filter((Student s)-> s.getGradYear() == 2011)
                 .reduce((s,s1)-> {
                     if(s.getScore() > s1.getScore()){
                         return s;
@@ -133,22 +144,17 @@ public class IterationLambadaTest {
                     else{
                         return s1;
                     }
-                }).get();
-        ;
-
-        highestScore = st.getScore();
-
+                }).get().getScore();
     }
 
     @Test
-    public void testLambdaLoopReduceNamedFunc() throws Exception {
+    public void loopReduceNamedFunc() throws Exception {
 
         res.setProcess(new Object(){}.getClass().getEnclosingMethod().getName());
 
-        Student st = students.stream().parallel()
-                .reduce(this::compareScore).get();
-
-        highestScore = st.getScore();
+        highestScore = students.stream().parallel()
+                .filter(this::filterStudent)
+                .reduce(this::compareScore).get().getScore();
 
     }
 
@@ -168,6 +174,40 @@ public class IterationLambadaTest {
 
     private final Double getMapper(Student s){
         return s.getScore();
+    }
+
+
+    @Test
+    public void forEachAnonymousLambda() throws Exception {
+
+        res.setProcess(new Object(){}.getClass().getEnclosingMethod().getName());
+
+        students.parallelStream().forEach(s->{
+            if(s.getGradYear() == 2011){
+                if(s.getScore() > highestScore){
+                    highestScore = s.getScore();
+                }
+            }
+        });
+
+
+    }
+
+    @Test
+    public void forEachNamedFunction() throws Exception {
+
+        res.setProcess(new Object(){}.getClass().getEnclosingMethod().getName());
+
+        students.parallelStream().forEach(this::studentFilter);
+    }
+
+    public Student studentFilter(Student s){
+        if(s.getGradYear() == 2011){
+            if(s.getScore() > highestScore){
+                highestScore = s.getScore();
+            }
+        }
+        return s;
     }
 
 
