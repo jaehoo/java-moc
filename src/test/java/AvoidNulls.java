@@ -6,6 +6,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+
 /**
  * Created by <a href="https://twitter.com/jaehoox">jaehoo</a> on 29/06/2018
  */
@@ -24,11 +29,11 @@ public class AvoidNulls {
 
     public String getDiscountLine(Customer customer) {
 
-        Integer discount = getDiscountPercentage(customer.getMemberCard());
+        Optional<Integer> discount = getDiscountPercentage(customer.getMemberCard());
 
-        if (discount != null) {
+        if (discount.isPresent()) {
 
-            return "Discount%: " + discount;
+            return "Discount%: " + discount.get();
 
         } else {
 
@@ -38,22 +43,17 @@ public class AvoidNulls {
 
     }
 
-    private Integer getDiscountPercentage(MemberCard card) {
+    private Optional<Integer> getDiscountPercentage(MemberCard card) {
 
         if (card.getFidelityPoints() >= 100) {
-
-            return 5;
-
+            return of(5);
         }
 
         if (card.getFidelityPoints() >= 50) {
-
-            return 3;
-
+            return of(3);
         }
 
-        return null;
-
+        return empty();
     }
 
 }
