@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 /**
  * Created by <a href="https://twitter.com/jaehoox">jaehoo</a> on 29/06/2018
@@ -30,16 +31,14 @@ public class AvoidNulls {
 
     public String getDiscountLine(Customer customer) {
 
-        return getDiscountPercentage(customer.getMemberCard())
-                .map(d -> "Discount%: " + d).orElse("");
+        return customer.getMemberCard()
+                .map(card -> getDiscountPercentage(card))
+                .map(d -> "Discount%: " + d)
+                .orElse("");
 
     }
 
     private Optional<Integer> getDiscountPercentage(MemberCard card) {
-
-        if (card == null) {
-            return empty();
-        }
 
         if (card.getFidelityPoints() >= 100) {
             return of(5);
@@ -61,6 +60,12 @@ public class AvoidNulls {
 class Customer{
 
     private MemberCard memberCard;
+
+    public Optional<MemberCard> getMemberCard() {
+
+        return ofNullable(memberCard);
+
+    }
 
 }
 
