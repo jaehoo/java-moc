@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -31,10 +32,10 @@ public class AvoidNulls {
 
     public String getDiscountLine(Customer customer) {
 
-        return customer.getMemberCard()
+        return Optional.ofNullable(customer.getMemberCard())
                 .flatMap(card -> getDiscountPercentage(card))
                 .map(d -> "Discount%: " + d)
-                .orElse("");
+                .orElse("" );
 
     }
 
@@ -61,11 +62,6 @@ class Customer{
 
     private MemberCard memberCard;
 
-    public Optional<MemberCard> getMemberCard() {
-
-        return ofNullable(memberCard);
-
-    }
 
 }
 
