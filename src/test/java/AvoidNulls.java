@@ -37,6 +37,10 @@ public class AvoidNulls {
 
     private Optional<Integer> getDiscountPercentage(MemberCard card) {
 
+        if (card == null) {
+            return empty();
+        }
+
         if (card.getFidelityPoints() >= 100) {
             return of(5);
         }
