@@ -35,6 +35,7 @@ public class IterationLambadaTest {
     @Before
     public void setUp() throws Exception {
 
+        highestScore = 0.0;
         res = new Result();
         res.setStart(System.currentTimeMillis());
 
@@ -81,9 +82,8 @@ public class IterationLambadaTest {
 
         highestScore = students.stream().parallel()
                 .filter((Student s)-> s.getGradYear() == 2011)
-                .map((Student s)->s.getScore())
-                .max(Comparator.comparing((Double::valueOf)))
-                .get();
+                .mapToDouble((s)->s.getScore())
+                .max().getAsDouble();
 
     }
 
@@ -94,9 +94,12 @@ public class IterationLambadaTest {
 
         highestScore = students.stream().parallel()
                 .filter(this::filterStudent)
-                .map(this::getMapper)
-                .max(Comparator.comparing((Double::valueOf)))
-                .get();
+                .mapToDouble(this::getMapper)
+                .max().getAsDouble();
+
+
+
+
 //        highestScore = students.stream().parallel()
 //                .max(Comparator.comparing(Student::getScore)).get();
         //.reduce((student, student2) -> {student.getScore()});
