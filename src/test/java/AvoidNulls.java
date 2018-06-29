@@ -24,22 +24,14 @@ public class AvoidNulls {
 
         log.info("{}",getDiscountLine(new Customer(new MemberCard(60))));
         log.info("{}",getDiscountLine(new Customer(new MemberCard(10))));
+        log.info("{}",getDiscountLine(new Customer()));
 
     }
 
     public String getDiscountLine(Customer customer) {
 
-        Optional<Integer> discount = getDiscountPercentage(customer.getMemberCard());
-
-        if (discount.isPresent()) {
-
-            return "Discount%: " + discount.get();
-
-        } else {
-
-            return "";
-
-        }
+        return getDiscountPercentage(customer.getMemberCard())
+                .map(d -> "Discount%: " + d).orElse("");
 
     }
 
