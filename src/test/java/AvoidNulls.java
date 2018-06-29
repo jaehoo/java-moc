@@ -24,7 +24,17 @@ public class AvoidNulls {
 
     public String getDiscountLine(Customer customer) {
 
-        return "Discount%: " + getDiscountPercentage(customer.getMemberCard());
+        Integer discount = getDiscountPercentage(customer.getMemberCard());
+
+        if (discount != null) {
+
+            return "Discount%: " + discount;
+
+        } else {
+
+            return "";
+
+        }
 
     }
 
