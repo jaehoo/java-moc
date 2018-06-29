@@ -32,7 +32,7 @@ public class AvoidNulls {
     public String getDiscountLine(Customer customer) {
 
         return customer.getMemberCard()
-                .map(card -> getDiscountPercentage(card))
+                .flatMap(card -> getDiscountPercentage(card))
                 .map(d -> "Discount%: " + d)
                 .orElse("");
 
